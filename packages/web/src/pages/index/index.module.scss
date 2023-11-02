@@ -1,0 +1,45 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  padding: 15px;
+  gap: 15px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+}
+.panel {
+  flex: 0 0 300px;
+  height: 100%;
+}
+.preview {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .previewWrap {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.previewDiv {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.canvas {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
