@@ -20,14 +20,6 @@ function Index() {
     html2canvas(templateRef.current as HTMLElement, {
       scale: 0.5,
       canvas: canvasRef.current as HTMLCanvasElement,
-    }).then((canvas) => {
-      // canvas.style.maxWidth = "100%";
-      // canvas.style.maxHeight = "100%";
-      // canvas.style.width = "auto";
-      // canvas.style.height = "auto";
-      // const canvasWrap = document.getElementById("canvas");
-      // canvasWrap!.innerHTML = "";
-      // canvasWrap?.appendChild(canvas);
     });
   };
 
