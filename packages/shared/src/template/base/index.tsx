@@ -1,16 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { ImageFile, keyofExifInfo } from "../../type";
+import React, { useLayoutEffect, useState } from "react";
+import {
+  BaseTemplateProps,
+  Placehoder,
+  TemplateComponent,
+  keyofExifInfo,
+} from "../../type";
 import styles from "./index.module.scss";
-import { ExifKey } from "@shared/constants";
-import { logo } from "@shared/imgs/logo";
-
-export type Placehoder = keyofExifInfo[];
-
-export interface BaseTemplateProps {
-  image: ImageFile;
-  placehoders?: Placehoder;
-  onLoad?: () => void;
-}
+import { ExifKey } from "../../constants";
+import { logo } from "../../imgs/logo";
+import { calcSizeByImageSize } from "../../utils/calc";
 
 const defalutPlacehoders: Placehoder = [
   ExifKey.ISO,
@@ -25,10 +23,16 @@ function _BaseTemplate(
   props: BaseTemplateProps,
   ref: React.Ref<HTMLDivElement>
 ) {
-  const { image, placehoders = defalutPlacehoders, onLoad } = props;
+  const {
+    image,
+    placehoders = defalutPlacehoders,
+    onLoad,
+    preview = false,
+  } = props;
   const imgRef = React.useRef<HTMLImageElement>(null);
   const { exifInfo, rawFile } = image;
   const [baseHeight, setBaseHeight] = useState<number>(0);
+  const [baseWidth, setBaseWidth] = useState<number>(0);
   const [baseFontSize, setBaseFontSize] = useState<number>(0);
 
   const renderInfo = (key: keyofExifInfo) => {
@@ -104,21 +108,34 @@ function _BaseTemplate(
     }
   };
 
+  useLayoutEffect(() => {
+    setBaseWidth(0);
+  }, [image]);
+
   const imgOnload = () => {
-    const { height } = imgRef.current!;
-    const baseHeight = height / 7;
+    const { height, width } = imgRef.current!;
+    const baseHeight = calcSizeByImageSize(width, height);
+    const baseWidth = width;
     setBaseHeight(baseHeight);
-    setBaseFontSize(baseHeight / 7);
+    setBaseWidth(baseWidth);
+    setBaseFontSize(baseHeight / 6);
     setTimeout(() => {
       onLoad?.();
     }, 0);
   };
 
   return (
-    <div ref={ref}>
+    <div
+      ref={ref}
+      style={{
+        width: baseWidth ? baseWidth + "px" : "fit-content",
+        height: baseWidth ? "auto" : "100%",
+      }}
+    >
       <img
         style={{
-          maxWidth: "none",
+          maxWidth: preview ? "100%" : "none",
+          maxHeight: preview ? "85%" : "none",
         }}
         ref={imgRef}
         src={image.url}
@@ -130,14 +147,11 @@ function _BaseTemplate(
         style={{
           height: baseHeight,
           padding: `${baseHeight / 8}px ${baseHeight / 6}px`,
+          fontSize: baseFontSize + "px",
         }}
       >
         <div className={styles.left}>
-          <div
-            style={{
-              fontSize: baseFontSize + "px",
-            }}
-          >
+          <div style={{}}>
             {renderInfo(placehoders[0])}
             &nbsp;
             {renderInfo(placehoders[1])}
@@ -166,9 +180,10 @@ function _BaseTemplate(
   );
 }
 
-const BaseTemplate: any = React.forwardRef<HTMLDivElement, BaseTemplateProps>(
-  _BaseTemplate
-);
+const BaseTemplate: TemplateComponent = React.forwardRef<
+  HTMLDivElement,
+  BaseTemplateProps
+>(_BaseTemplate);
 
 BaseTemplate.canUsePlacehoder = [ExifKey.ISO];
 

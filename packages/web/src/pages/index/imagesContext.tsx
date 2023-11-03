@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { ImageFile } from "@shared/index";
+import { ImageFile } from "@shared";
 
 import {
   FunctionComponent,

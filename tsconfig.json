@@ -21,5 +21,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
-  }
+  },
+  "include": ["packages/**/*", "./global.d.ts"]
 }

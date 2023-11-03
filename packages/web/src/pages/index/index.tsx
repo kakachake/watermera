@@ -1,36 +1,37 @@
-import { ImageFile } from "@shared/index";
+import { ImageFile, templates } from "@shared";
 import ImageUpload from "../../components/ImageUpload";
 import styles from "./index.module.scss";
-import { Card } from "@nextui-org/react";
+import { Button, Card, CardBody } from "@nextui-org/react";
 import { Panel } from "../../components/Panel";
 import { ImagesProviderHOC, useImagesContext } from "./imagesContext";
 import Preview from "../../components/Preview";
-import html2canvas from "html2canvas";
-import { useRef } from "react";
+import { exportImgByTemp } from "@shared";
 
 function Index() {
   const { setImages, current } = useImagesContext();
-  const templateRef = useRef<HTMLDivElement>(null);
   const handleOnChange = (files: ImageFile[]) => {
     setImages(files);
   };
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const onLoad = () => {
-    html2canvas(templateRef.current as HTMLElement, {
-      scale: 0.5,
-      canvas: canvasRef.current as HTMLCanvasElement,
-    });
+  const onLoad = () => {};
+  const handleExport = () => {
+    exportImgByTemp(current.image!, templates["base"]);
   };
 
   return (
     <div className={styles.container}>
-      <Card className={styles.preview}>
-        <Preview image={current.image} ref={templateRef} onLoad={onLoad} />
-        <canvas ref={canvasRef} className={styles.canvas}></canvas>
+      <Card className={styles.previewCard}>
+        <CardBody className={styles.previewBody}>
+          <Preview image={current.image} onLoad={onLoad} />
+        </CardBody>
       </Card>
       <div className={styles.panel}>
-        <ImageUpload onChange={handleOnChange} />
+        <div>
+          <ImageUpload onChange={handleOnChange} />
+          <Button color="primary" onClick={handleExport}>
+            导出
+          </Button>
+        </div>
         <Panel />
       </div>
     </div>

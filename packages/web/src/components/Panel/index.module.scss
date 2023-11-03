@@ -1,0 +1,20 @@
+.panelWrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  // padding-bottom: 0 !important;
+  overflow: hidden;
+}
+
+.panelItem {
+  flex: 1;
+}
+.tabContent {
+  flex: 1;
+}

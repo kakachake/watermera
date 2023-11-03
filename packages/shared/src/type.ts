@@ -1,3 +1,11 @@
+import {
+  ForwardRefExoticComponent,
+  ForwardedRef,
+  FunctionComponent,
+  PropsWithoutRef,
+  RefAttributes,
+} from "react";
+
 export interface ImageFile {
   rawFile: File;
   url: string;
@@ -56,3 +64,18 @@ export type ExifInfo = {
 };
 
 export type keyofExifInfo = keyof ExifInfo;
+
+export type TemplateComponent = ForwardRefExoticComponent<
+  PropsWithoutRef<BaseTemplateProps> & RefAttributes<any>
+> & {
+  canUsePlacehoder?: string[];
+};
+
+export type Placehoder = keyofExifInfo[];
+
+export interface BaseTemplateProps {
+  image: ImageFile;
+  placehoders?: Placehoder;
+  preview?: boolean;
+  onLoad?: () => void;
+}
