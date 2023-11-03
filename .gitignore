@@ -9,7 +9,7 @@ package-lock.json
 lib/
 esm/
 temp_esm/
-dist/
+# dist/
 type-artefacts/
 build/
 coverage/
