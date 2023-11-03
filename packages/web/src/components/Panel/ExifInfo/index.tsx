@@ -43,7 +43,9 @@ export default function ExifInfoComp(props: ExifInfoProps) {
                   <div className={styles.key}>{key}</div>
                 </TableCell>
                 <TableCell>
-                  <div className={styles.value}>{exifInfo[key].toString()}</div>
+                  <div className={styles.value}>
+                    {exifInfo[key as keyof ExifInfo].toString()}
+                  </div>
                 </TableCell>
               </TableRow>
             );
