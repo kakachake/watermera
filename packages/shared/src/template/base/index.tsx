@@ -45,7 +45,7 @@ function _BaseTemplate(
               fontSize: baseFontSize,
             }}
           >
-            ISO{exifInfo[key]}
+            ISO{exifInfo?.[key]}
           </span>
         );
       case ExifKey.FNumber:
@@ -56,7 +56,7 @@ function _BaseTemplate(
               fontSize: baseFontSize,
             }}
           >
-            f{exifInfo[key]}
+            f{exifInfo?.[key]}
           </span>
         );
       case ExifKey.ExposureTime:
@@ -67,7 +67,7 @@ function _BaseTemplate(
               fontSize: baseFontSize,
             }}
           >
-            1/{1 / exifInfo[key]}s
+            1/{1 / exifInfo?.[key]}s
           </span>
         );
       case ExifKey.CreateDate:
@@ -78,7 +78,7 @@ function _BaseTemplate(
               fontSize: baseFontSize,
             }}
           >
-            {exifInfo[key].toLocaleString()}
+            {exifInfo?.[key]?.toLocaleString()}
           </span>
         );
       case ExifKey.Model:
@@ -89,7 +89,7 @@ function _BaseTemplate(
               fontSize: baseFontSize,
             }}
           >
-            {exifInfo[key]}
+            {exifInfo?.[key]}
           </span>
         );
       case ExifKey.LensModel:
@@ -100,11 +100,35 @@ function _BaseTemplate(
               fontSize: baseFontSize,
             }}
           >
-            {exifInfo[key]}
+            {exifInfo?.[key]}
           </span>
         );
       default:
         "";
+    }
+  };
+
+  const renderLogo = () => {
+    const logoName = exifInfo?.Make?.toLocaleLowerCase();
+    if (logoName in logo) {
+      return (
+        <img
+          src={logo[logoName as keyof typeof logo]}
+          alt={logoName}
+          style={{ width: "100%" }}
+        />
+      );
+    } else {
+      return (
+        <span
+          className={styles.logoName}
+          style={{
+            fontSize: baseFontSize + 5 + "px",
+          }}
+        >
+          {logoName?.toUpperCase()}
+        </span>
+      );
     }
   };
 
@@ -161,7 +185,7 @@ function _BaseTemplate(
           <div>{renderInfo(placehoders[3])}</div>
         </div>
         <div className={styles.right}>
-          <img src={logo.panasonic} alt="" />
+          {renderLogo()}
           <div
             style={{
               width: "3px",

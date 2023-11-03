@@ -28,7 +28,7 @@ function Preview(
 
   return (
     <>
-      {!loaded && (
+      {image && !loaded && (
         <div
           className={classnames(styles.loading, {
             [styles.loadingEnd]: loaded,
