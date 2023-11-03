@@ -40,6 +40,7 @@ export function exportImgByDiv(div: HTMLDivElement) {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob!);
         a.download = "image.png";
+        a.target = "_blank";
         a.click();
         resolve(true);
       });
