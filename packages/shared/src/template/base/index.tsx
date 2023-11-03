@@ -115,7 +115,9 @@ function _BaseTemplate(
         <img
           src={logo[logoName as keyof typeof logo]}
           alt={logoName}
-          style={{ width: "100%" }}
+          style={{
+            height: "60%",
+          }}
         />
       );
     } else {
