@@ -1,7 +1,7 @@
 import { ImageFile } from "@shared";
 import classnames from "classnames";
 import styles from "./index.module.scss";
-import { Image } from "@nextui-org/react";
+import LazyImage from "../LazyImage/indx";
 
 export interface LeftImgListProps {
   images: ImageFile[];
@@ -23,7 +23,7 @@ export default function LeftImgList(props: LeftImgListProps) {
             })}
             onClick={() => onClick(idx)}
           >
-            <Image isZoomed isBlurred className="z-0" src={url} alt="" />
+            <LazyImage isZoomed isBlurred className="z-0" src={url} alt="" />
           </div>
         );
       })}
