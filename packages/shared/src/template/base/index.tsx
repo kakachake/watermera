@@ -33,7 +33,6 @@ function _BaseTemplate(
   const imgRef = React.useRef<HTMLImageElement>(null);
   const { exifInfo, rawFile } = image;
   const [baseHeight, setBaseHeight] = useState<number>(0);
-  const [baseWidth, setBaseWidth] = useState<number>(0);
   const [baseFontSize, setBaseFontSize] = useState<number>(0);
 
   const renderInfo = (key: keyofExifInfo) => {

@@ -38,6 +38,7 @@
   align-items: center;
   flex-direction: column;
   .imageListWrap {
+    overflow: hidden;
     margin-top: 10px;
     overflow: auto;
     flex: 1;
