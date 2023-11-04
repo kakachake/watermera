@@ -23,19 +23,32 @@ export const fileToArrayBuffer = (file: File): Promise<ArrayBuffer> => {
   });
 };
 
-export const getExifInfo = (file: ArrayBuffer): Promise<ExifInfo> => {
+export const getExifInfo = (file: File): Promise<ExifInfo> => {
   return exifr.parse(file);
 };
 
-export const mergeFiles = (files: File[]): Promise<ImageFile[]> => {
+export const mergeFiles = (
+  files: File[],
+  callback: (idx: number, total: number) => void
+): Promise<ImageFile[]> => {
+  let cun = 0;
   return Promise.all(
-    files.map(async (file) => {
-      const url = fileToUrl(file);
-      const base64 = await fileToBase64(file);
-      const buffer = await fileToArrayBuffer(file);
+    files.map(async (file, idx) => {
+      console.log("正在处理第" + idx + "张图片");
 
-      const exifInfo = await getExifInfo(buffer);
-      console.log(file);
+      console.time("fileToUrl" + idx);
+      const url = fileToUrl(file);
+      console.timeEnd("fileToUrl" + idx);
+      callback(++cun, files.length * 3);
+      console.time("fileToBase64" + idx);
+      const base64 = await fileToBase64(file);
+      console.timeEnd("fileToBase64" + idx);
+      callback(++cun, files.length * 3);
+      console.time("getExifInfo" + idx);
+      const exifInfo = await getExifInfo(file);
+      console.timeEnd("getExifInfo" + idx);
+
+      callback(++cun, files.length * 3);
       return {
         rawFile: file,
         url,

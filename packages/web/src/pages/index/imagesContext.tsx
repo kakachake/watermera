@@ -17,6 +17,7 @@ export interface ImagesContextType {
   };
   setImages: (images: ImageFile[]) => void;
   setCurrent: (current: ImagesContextType["current"]) => void;
+  setCurrentIdx: (idx: number) => void;
 }
 
 const ImagesContext = createContext<ImagesContextType>({
@@ -30,6 +31,9 @@ const ImagesContext = createContext<ImagesContextType>({
   },
   setCurrent: () => {
     throw new Error("setCurrent not implemented");
+  },
+  setCurrentIdx: () => {
+    throw new Error("setCurrentIdx not implemented");
   },
 });
 
@@ -58,11 +62,18 @@ export const ImagesProviderHOC = (
         image: images[currentIndex],
         index: currentIndex,
       });
-    }, [images, current.index]);
+    }, [images]);
+
+    const setCurrentIdx = (idx: number) => {
+      setCurrent({
+        image: images[idx],
+        index: idx,
+      });
+    };
 
     return (
       <ImagesContext.Provider
-        value={{ images, current, setImages, setCurrent }}
+        value={{ images, current, setImages, setCurrent, setCurrentIdx }}
       >
         <Comp {...props} />
       </ImagesContext.Provider>

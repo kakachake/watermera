@@ -10,6 +10,8 @@ export function Panel() {
   return (
     <div className={styles.panelWrap}>
       <Tabs
+        size="sm"
+        fullWidth
         aria-label="Options"
         classNames={{
           panel: styles.panel,
@@ -20,6 +22,11 @@ export function Panel() {
             <CardBody>
               <ExifInfo exifInfo={exifInfo} />
             </CardBody>
+          </Card>
+        </Tab>
+        <Tab key="模板配置" title="模板配置">
+          <Card className={styles.panelItem}>
+            <CardBody></CardBody>
           </Card>
         </Tab>
         <Tab key="模板选择" title="模板选择">

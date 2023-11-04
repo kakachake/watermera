@@ -23,23 +23,35 @@ const getRootDiv = (() => {
 })();
 
 export function exportImgByTemp(imageFile: ImageFile, Comp: TemplateComponent) {
-  const div = getRootDiv();
-  const node = createRoot(div);
-  const onLoad = () => {
-    exportImgByDiv(div).then(() => {
-      node.unmount();
-    });
-  };
-  node.render(<Comp image={imageFile} onLoad={onLoad} />);
+  return new Promise((resolve) => {
+    const div = getRootDiv();
+    const node = createRoot(div);
+    const onLoad = () => {
+      exportImgByDiv(div, {
+        fileName: imageFile.rawFile.name,
+      }).then(() => {
+        node.unmount();
+        resolve(true);
+      });
+    };
+    node.render(<Comp image={imageFile} onLoad={onLoad} />);
+  });
 }
 
-export function exportImgByDiv(div: HTMLDivElement) {
+export function exportImgByDiv(
+  div: HTMLDivElement,
+  {
+    fileName = "image.png",
+  }: {
+    fileName?: string;
+  }
+) {
   return new Promise((resolve) => {
     html2canvas(div as HTMLElement, {}).then((canvas: HTMLCanvasElement) => {
       canvas.toBlob((blob) => {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob!);
-        a.download = "image.png";
+        a.download = fileName;
         a.target = "_blank";
         a.click();
         resolve(true);
