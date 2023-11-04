@@ -7,6 +7,8 @@ import { ImagesProviderHOC, useImagesContext } from "./imagesContext";
 import Preview from "../../components/Preview";
 import useExportImgByTemp from "../../hooks/useExportImgByTemp";
 import LeftImgList from "../../components/LeftImgList";
+import useExportImgsByTemp from "../../hooks/useExportImgsByTemp";
+import ProgressButton from "../../components/ProgressButton";
 
 function Index() {
   const { images, setImages, current, setCurrentIdx } = useImagesContext();
@@ -17,6 +19,12 @@ function Index() {
   const onLoad = () => {};
 
   const { isExporting, handleExport } = useExportImgByTemp(current.image!);
+
+  const {
+    isExporting: isExportingAll,
+    progress,
+    handleExport: handleExportAll,
+  } = useExportImgsByTemp(images);
 
   const handleImageChange = (idx: number) => {
     setCurrentIdx(idx);
@@ -47,7 +55,7 @@ function Index() {
       </Card>
       <div className={styles.panel}>
         <Panel />
-        <div>
+        <div className="flex flex-row gap-1">
           <Button
             isLoading={isExporting}
             disabled={!current.image}
@@ -58,6 +66,18 @@ function Index() {
           >
             导出
           </Button>
+          <ProgressButton
+            isLoading={isExportingAll}
+            disabled={!current.image}
+            size="sm"
+            progress={progress.percent}
+            fullWidth
+            color="primary"
+            onClick={handleExportAll}
+          >
+            批量导出
+            {isExportingAll && `（${progress.idx} / ${progress.total}）`}
+          </ProgressButton>
         </div>
       </div>
     </div>

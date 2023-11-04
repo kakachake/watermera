@@ -28,6 +28,7 @@ function _BaseTemplate(
     placehoders = defalutPlacehoders,
     onLoad,
     preview = false,
+    ...rest
   } = props;
   const imgRef = React.useRef<HTMLImageElement>(null);
   const { exifInfo, rawFile } = image;
@@ -141,27 +142,19 @@ function _BaseTemplate(
   const imgOnload = () => {
     const { height, width } = imgRef.current!;
     const baseHeight = calcSizeByImageSize(width, height);
-    const baseWidth = width;
     setBaseHeight(baseHeight);
-    setBaseWidth(baseWidth);
     setBaseFontSize(baseHeight / 6);
     setTimeout(() => {
       onLoad?.();
-    }, 0);
+    }, 100);
   };
 
   return (
-    <div
-      ref={ref}
-      style={{
-        width: baseWidth ? baseWidth + "px" : "fit-content",
-        height: baseWidth ? "auto" : "100%",
-      }}
-    >
+    <div ref={ref} style={{}} className={styles.wrap} {...rest}>
       <img
         style={{
-          maxWidth: preview ? "100%" : "none",
-          maxHeight: preview ? "85%" : "none",
+          maxWidth: "none",
+          maxHeight: "none",
         }}
         ref={imgRef}
         src={image.url}
