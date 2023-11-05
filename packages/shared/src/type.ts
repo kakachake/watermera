@@ -3,12 +3,22 @@ import {
   PropsWithoutRef,
   RefAttributes,
 } from "react";
+import { SchemaBase } from "form-render";
+import { templates } from ".";
 
+export interface templateOptions {
+  placehoders?: Placehoders<any>;
+}
 export interface ImageFile {
   rawFile: File;
   url: string;
   base64: string;
   exifInfo: ExifInfo;
+  templateOptions: {
+    [key in keyof typeof templates]?: {
+      placeholders?: Placehoders<any>;
+    };
+  };
 }
 
 export type ExifInfo = {
@@ -63,17 +73,26 @@ export type ExifInfo = {
 
 export type keyofExifInfo = keyof ExifInfo;
 
-export type TemplateComponent = ForwardRefExoticComponent<
-  PropsWithoutRef<BaseTemplateProps> & RefAttributes<any>
-> & {
-  canUsePlacehoder?: string[];
+export type PlacehoderSchema = SchemaBase & {
+  default: string;
 };
 
-export type Placehoder = keyofExifInfo[];
+export type Placehoders<T extends (string | number)[]> = Record<
+  T[number],
+  string
+>;
 
-export interface BaseTemplateProps {
+export type TemplateComponent<T extends (string | number)[]> =
+  ForwardRefExoticComponent<
+    PropsWithoutRef<BaseTemplateProps<T>> & RefAttributes<any>
+  > & {
+    placehoderSchemas?: Record<T[number], PlacehoderSchema>;
+    optionSchemas?: Record<string, any>;
+  };
+
+export interface BaseTemplateProps<T extends (string | number)[] = []> {
   image: ImageFile;
-  placehoders?: Placehoder;
+  placehoders?: Placehoders<T>;
   preview?: boolean;
   onLoad?: () => void;
 }

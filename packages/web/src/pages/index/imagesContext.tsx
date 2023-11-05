@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { ImageFile } from "@shared";
+import { ImageFile, templates } from "@shared";
 
 import {
   FunctionComponent,
@@ -18,6 +18,10 @@ export interface ImagesContextType {
   setImages: (images: ImageFile[]) => void;
   setCurrent: (current: ImagesContextType["current"]) => void;
   setCurrentIdx: (idx: number) => void;
+  setTemplateOptions: (
+    templateName: keyof typeof templates,
+    templateOptions: ImageFile["templateOptions"][keyof typeof templates]
+  ) => void;
 }
 
 const ImagesContext = createContext<ImagesContextType>({
@@ -34,6 +38,9 @@ const ImagesContext = createContext<ImagesContextType>({
   },
   setCurrentIdx: () => {
     throw new Error("setCurrentIdx not implemented");
+  },
+  setTemplateOptions: () => {
+    throw new Error("setTemplateOptions not implemented");
   },
 });
 
@@ -72,9 +79,33 @@ export const ImagesProviderHOC = (
       });
     };
 
+    const setTemplateOptions = (
+      templateName: keyof typeof templates,
+      templateOptions: ImageFile["templateOptions"][keyof typeof templates]
+    ) => {
+      const image = current.image;
+      if (!image) {
+        return;
+      }
+      image.templateOptions[templateName] = templateOptions;
+      console.log("set", templateOptions);
+
+      setCurrent({
+        image,
+        index: current.index,
+      });
+    };
+
     return (
       <ImagesContext.Provider
-        value={{ images, current, setImages, setCurrent, setCurrentIdx }}
+        value={{
+          images,
+          current,
+          setImages,
+          setCurrent,
+          setCurrentIdx,
+          setTemplateOptions,
+        }}
       >
         <Comp {...props} />
       </ImagesContext.Provider>

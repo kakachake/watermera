@@ -54,6 +54,7 @@ export const mergeFiles = (
         url,
         base64,
         exifInfo,
+        templateOptions: {},
       } as ImageFile;
     })
   );

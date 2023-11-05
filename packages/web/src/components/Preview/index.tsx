@@ -62,6 +62,8 @@ function Preview({ image, onLoad }: PreviewProps) {
     ref.current!.style.transform = `scale(${nextScale})`;
   };
 
+  console.log(image?.templateOptions["base"]);
+
   return (
     <>
       {image && !loaded && (
@@ -89,6 +91,7 @@ function Preview({ image, onLoad }: PreviewProps) {
                   key={image.rawFile.name}
                   onLoad={onLoadPreview}
                   preview={true}
+                  placehoders={image.templateOptions["base"]?.placeholders}
                 />
               </div>
             </div>

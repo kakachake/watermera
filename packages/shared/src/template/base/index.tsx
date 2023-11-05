@@ -1,110 +1,90 @@
-import React, { useState } from "react";
+import React, { useImperativeHandle } from "react";
 import {
   BaseTemplateProps,
-  Placehoder,
   TemplateComponent,
   keyofExifInfo,
 } from "../../type";
 import styles from "./index.module.scss";
-import { ExifKey } from "../../constants";
+import { ExifKey, ExifKeyName } from "../../constants";
 import { logo } from "../../imgs/logo";
 import { calcSizeByImageSize } from "../../utils/calc";
+import {
+  getDefalutPlacehoders,
+  parseOptionsByKeyValue,
+} from "../../utils/template";
 
-const defalutPlacehoders: Placehoder = [
-  ExifKey.ISO,
-  ExifKey.FNumber,
-  ExifKey.ExposureTime,
-  ExifKey.CreateDate,
-  ExifKey.Model,
-  ExifKey.LensModel,
+export type PlacehoderKeys = [
+  "leftTop1",
+  "leftTop2",
+  "leftTop3",
+  "leftBottom",
+  "rightTop",
+  "rightBottom"
 ];
 
 function _BaseTemplate(
-  props: BaseTemplateProps,
+  props: BaseTemplateProps<PlacehoderKeys>,
   ref: React.Ref<HTMLDivElement>
 ) {
   const {
     image,
-    placehoders = defalutPlacehoders,
+    placehoders = getDefalutPlacehoders(BaseTemplate),
     onLoad,
     // preview = false,
     ...rest
   } = props;
+  console.log("placehoders", placehoders);
+
   const imgRef = React.useRef<HTMLImageElement>(null);
   const { exifInfo, rawFile } = image;
-  const [baseHeight, setBaseHeight] = useState<number>(0);
-  const [baseFontSize, setBaseFontSize] = useState<number>(0);
+  const divRef = React.useRef<HTMLDivElement>(null);
+
+  if (!placehoders) {
+    throw Error("placeholder为空，请检查");
+  }
+
+  useImperativeHandle(ref, () => divRef.current!);
 
   const renderInfo = (key: keyofExifInfo) => {
     switch (key) {
       case ExifKey.ISO:
         return (
-          <span
-            className={styles.boldFont}
-            style={{
-              fontSize: baseFontSize,
-            }}
-          >
+          <span className={styles.boldFont} style={{}}>
             ISO{exifInfo?.[key]}
           </span>
         );
       case ExifKey.FNumber:
         return (
-          <span
-            className={styles.boldFont}
-            style={{
-              fontSize: baseFontSize,
-            }}
-          >
+          <span className={styles.boldFont} style={{}}>
             f{exifInfo?.[key]}
           </span>
         );
       case ExifKey.ExposureTime:
         return (
-          <span
-            className={styles.boldFont}
-            style={{
-              fontSize: baseFontSize,
-            }}
-          >
+          <span className={styles.boldFont} style={{}}>
             1/{1 / exifInfo?.[key]}s
           </span>
         );
       case ExifKey.CreateDate:
         return (
-          <span
-            className={styles.boldFont}
-            style={{
-              fontSize: baseFontSize,
-            }}
-          >
+          <span className={styles.boldFont} style={{}}>
             {exifInfo?.[key]?.toLocaleString()}
           </span>
         );
       case ExifKey.Model:
         return (
-          <span
-            className={styles.boldFont}
-            style={{
-              fontSize: baseFontSize,
-            }}
-          >
+          <span className={styles.boldFont} style={{}}>
             {exifInfo?.[key]}
           </span>
         );
       case ExifKey.LensModel:
         return (
-          <span
-            className={styles.secondFont}
-            style={{
-              fontSize: baseFontSize,
-            }}
-          >
+          <span className={styles.secondFont} style={{}}>
             {exifInfo?.[key]}
           </span>
         );
       default:
-        "";
+        return exifInfo?.[key].toString() || "";
     }
   };
 
@@ -116,18 +96,13 @@ function _BaseTemplate(
           src={logo[logoName as keyof typeof logo]}
           alt={logoName}
           style={{
-            height: "60%",
+            height: "2em",
           }}
         />
       );
     } else {
       return (
-        <span
-          className={styles.logoName}
-          style={{
-            fontSize: baseFontSize + 5 + "px",
-          }}
-        >
+        <span className={styles.logoName} style={{}}>
           {logoName?.toUpperCase()}
         </span>
       );
@@ -136,16 +111,15 @@ function _BaseTemplate(
 
   const imgOnload = () => {
     const { height, width } = imgRef.current!;
-    const baseHeight = calcSizeByImageSize(width, height);
-    setBaseHeight(baseHeight);
-    setBaseFontSize(baseHeight / 6);
+    const baseSize = calcSizeByImageSize(width, height);
+    divRef.current!.style.fontSize = baseSize + "px";
     setTimeout(() => {
       onLoad?.();
     }, 100);
   };
 
   return (
-    <div ref={ref} style={{}} className={styles.wrap} {...rest}>
+    <div ref={divRef} style={{}} className={styles.wrap} {...rest}>
       <img
         style={{
           maxWidth: "none",
@@ -156,37 +130,30 @@ function _BaseTemplate(
         alt={rawFile.name}
         onLoad={imgOnload}
       />
-      <div
-        className={styles.infoBar}
-        style={{
-          height: baseHeight,
-          padding: `${baseHeight / 8}px ${baseHeight / 6}px`,
-          fontSize: baseFontSize + "px",
-        }}
-      >
+      <div className={styles.infoBar}>
         <div className={styles.left}>
           <div style={{}}>
-            {renderInfo(placehoders[0])}
+            {renderInfo(placehoders["leftTop1"] as keyofExifInfo)}
             &nbsp;
-            {renderInfo(placehoders[1])}
+            {renderInfo(placehoders["leftTop2"] as keyofExifInfo)}
             &nbsp;
-            {renderInfo(placehoders[2])}
+            {renderInfo(placehoders["leftTop3"] as keyofExifInfo)}
           </div>
-          <div>{renderInfo(placehoders[3])}</div>
+          <div>{renderInfo(placehoders["leftBottom"] as keyofExifInfo)}</div>
         </div>
         <div className={styles.right}>
           {renderLogo()}
           <div
             style={{
-              width: "3px",
-              height: "60%",
+              width: "0.1em",
+              height: "2em",
               background: "#000",
-              margin: `0 ${baseHeight / 6}px`,
+              margin: "0 0.5em",
             }}
           ></div>
           <div>
-            <div>{renderInfo(placehoders[4])}</div>
-            <div>{renderInfo(placehoders[5])}</div>
+            <div>{renderInfo(placehoders["rightTop"] as keyofExifInfo)}</div>
+            <div>{renderInfo(placehoders["rightBottom"] as keyofExifInfo)}</div>
           </div>
         </div>
       </div>
@@ -194,11 +161,59 @@ function _BaseTemplate(
   );
 }
 
-const BaseTemplate: TemplateComponent = React.forwardRef<
+const BaseTemplate: TemplateComponent<PlacehoderKeys> = React.forwardRef<
   HTMLDivElement,
-  BaseTemplateProps
+  BaseTemplateProps<PlacehoderKeys>
 >(_BaseTemplate);
 
-BaseTemplate.canUsePlacehoder = [ExifKey.ISO];
+BaseTemplate.placehoderSchemas = {
+  leftTop1: {
+    title: "左上1",
+    default: ExifKey.ISO,
+    type: "string",
+    props: {
+      options: parseOptionsByKeyValue(ExifKeyName),
+    },
+  },
+  leftTop2: {
+    title: "左上2",
+    default: ExifKey.FNumber,
+    type: "string",
+    props: {
+      options: parseOptionsByKeyValue(ExifKeyName),
+    },
+  },
+  leftTop3: {
+    title: "左上3",
+    default: ExifKey.ExposureTime,
+    type: "string",
+    props: {
+      options: parseOptionsByKeyValue(ExifKeyName),
+    },
+  },
+  leftBottom: {
+    default: ExifKey.CreateDate,
+    type: "string",
+    props: {
+      options: parseOptionsByKeyValue(ExifKeyName),
+    },
+  },
+  rightTop: {
+    default: ExifKey.Model,
+    type: "string",
+    props: {
+      options: parseOptionsByKeyValue(ExifKeyName),
+    },
+  },
+  rightBottom: {
+    default: ExifKey.LensModel,
+    type: "string",
+    props: {
+      options: parseOptionsByKeyValue(ExifKeyName),
+    },
+  },
+} as const;
+
+BaseTemplate.optionSchemas = {};
 
 export default BaseTemplate;
