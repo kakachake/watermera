@@ -24,7 +24,10 @@ function Index() {
     isExporting: isExportingAll,
     progress,
     handleExport: handleExportAll,
-  } = useExportImgsByTemp(images);
+  } = useExportImgsByTemp(images, {
+    placehoders: current.image?.templateOptions["base"]?.placeholders,
+    options: current.image?.templateOptions["base"]?.options,
+  });
 
   const handleImageChange = (idx: number) => {
     setCurrentIdx(idx);

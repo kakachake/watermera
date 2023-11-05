@@ -58,41 +58,17 @@ function _BaseTemplate(
   const renderInfo = (key: keyofExifInfo) => {
     switch (key) {
       case ExifKey.ISO:
-        return (
-          <span className={styles.boldFont} style={{}}>
-            ISO{exifInfo?.[key]}
-          </span>
-        );
+        return <span style={{}}>ISO{exifInfo?.[key]}</span>;
       case ExifKey.FNumber:
-        return (
-          <span className={styles.boldFont} style={{}}>
-            f{exifInfo?.[key]}
-          </span>
-        );
+        return <span style={{}}>f{exifInfo?.[key]}</span>;
       case ExifKey.ExposureTime:
-        return (
-          <span className={styles.boldFont} style={{}}>
-            1/{1 / exifInfo?.[key]}s
-          </span>
-        );
+        return <span style={{}}>1/{1 / exifInfo?.[key]}s</span>;
       case ExifKey.CreateDate:
-        return (
-          <span className={styles.boldFont} style={{}}>
-            {exifInfo?.[key]?.toLocaleString()}
-          </span>
-        );
+        return <span style={{}}>{exifInfo?.[key]?.toLocaleString()}</span>;
       case ExifKey.Model:
-        return (
-          <span className={styles.boldFont} style={{}}>
-            {exifInfo?.[key]}
-          </span>
-        );
+        return <span style={{}}>{exifInfo?.[key]}</span>;
       case ExifKey.LensModel:
-        return (
-          <span className={styles.secondFont} style={{}}>
-            {exifInfo?.[key]}
-          </span>
-        );
+        return <span style={{}}>{exifInfo?.[key]}</span>;
       default:
         return exifInfo?.[key].toString() || "";
     }
@@ -151,14 +127,16 @@ function _BaseTemplate(
       />
       <div className={styles.infoBar}>
         <div className={styles.left}>
-          <div style={{}}>
+          <div className={styles.boldFont}>
             {renderInfo(placehoders["leftTop1"] as keyofExifInfo)}
             &nbsp;
             {renderInfo(placehoders["leftTop2"] as keyofExifInfo)}
             &nbsp;
             {renderInfo(placehoders["leftTop3"] as keyofExifInfo)}
           </div>
-          <div>{renderInfo(placehoders["leftBottom"] as keyofExifInfo)}</div>
+          <div className={styles.boldFont}>
+            {renderInfo(placehoders["leftBottom"] as keyofExifInfo)}
+          </div>
         </div>
         <div className={styles.right}>
           {renderLogo()}
@@ -171,8 +149,12 @@ function _BaseTemplate(
             }}
           ></div>
           <div>
-            <div>{renderInfo(placehoders["rightTop"] as keyofExifInfo)}</div>
-            <div>{renderInfo(placehoders["rightBottom"] as keyofExifInfo)}</div>
+            <div className={styles.boldFont}>
+              {renderInfo(placehoders["rightTop"] as keyofExifInfo)}
+            </div>
+            <div className={styles.secondFont}>
+              {renderInfo(placehoders["rightBottom"] as keyofExifInfo)}
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { ImageFile, TemplateComponent } from "..";
+import { BaseTemplateProps, ImageFile, TemplateComponent } from "..";
 import { saveAs } from "file-saver";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
@@ -27,6 +27,7 @@ const getRootDiv = (() => {
 export function exportImgByTemp(
   imageFile: ImageFile,
   Comp: TemplateComponent,
+  props: Partial<BaseTemplateProps> = {},
   download = true
 ) {
   return new Promise<Blob>((resolve) => {
@@ -42,7 +43,7 @@ export function exportImgByTemp(
         resolve(blob);
       });
     };
-    node.render(<Comp image={imageFile} onLoad={onLoad} />);
+    node.render(<Comp image={imageFile} onLoad={onLoad} {...props} />);
   });
 }
 
@@ -56,15 +57,17 @@ export function getImgByDiv(div: HTMLDivElement) {
   });
 }
 
+// TODO: 批量导出有问题
 export async function exportImgsByTemp(
   images: ImageFile[],
   Comp: TemplateComponent,
+  props: Partial<BaseTemplateProps> = {},
   onProgress: (idx: number, total: number) => void
 ) {
   return new Promise<void>(async (resolve) => {
     const jszip = new JSZip();
     for (let i = 0; i < images.length; i++) {
-      await exportImgByTemp(images[i], Comp, false)
+      await exportImgByTemp(images[i], Comp, props, false)
         .then((blob: Blob) => {
           jszip.file(images[i].rawFile.name, blob);
         })
