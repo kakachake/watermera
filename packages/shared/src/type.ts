@@ -88,7 +88,7 @@ export type Placehoders<T extends (string | number)[]> = Record<
 
 export type Options<T extends (string | number)[]> = Record<T[number], any>;
 
-export type TemplateComponent<T extends (string | number)[]> =
+export type TemplateComponent<T extends (string | number)[] = []> =
   ForwardRefExoticComponent<
     PropsWithoutRef<BaseTemplateProps<T>> & RefAttributes<any>
   > & {
