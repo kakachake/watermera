@@ -44,7 +44,7 @@ function Preview({ image, onLoad }: PreviewProps) {
     e.stopPropagation();
     console.log(e);
     const { deltaY } = e;
-    const scaleStep = 0.05;
+    const scaleStep = 0.01;
     const scale = deltaY < 0 ? scaleStep : -scaleStep;
     const transform = ref.current!.style.transform;
     const currentScale = parseFloat(
@@ -92,6 +92,7 @@ function Preview({ image, onLoad }: PreviewProps) {
                   onLoad={onLoadPreview}
                   preview={true}
                   placehoders={image.templateOptions["base"]?.placeholders}
+                  options={image.templateOptions["base"]?.options}
                 />
               </div>
             </div>

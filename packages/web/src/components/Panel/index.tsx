@@ -13,6 +13,11 @@ export function Panel() {
       placeholders: value as Placehoders<any>,
     });
   };
+  const handleOptionsChange = (value: any) => {
+    setTemplateOptions("base", {
+      options: value as Placehoders<any>,
+    });
+  };
 
   return (
     <div className={styles.panelWrap}>
@@ -31,16 +36,30 @@ export function Panel() {
             </CardBody>
           </Card>
         </Tab>
-        <Tab key="模板配置" title="模板配置">
-          <Card className={styles.panelItem}>
-            <CardBody>
-              <TemplateOptions
-                template={templates["base"]}
-                onChange={handlePlacehodersChange}
-              />
-            </CardBody>
-          </Card>
-        </Tab>
+        {templates["base"].placehoderSchemas && (
+          <Tab key="字段配置" title="字段配置">
+            <Card className={styles.panelItem}>
+              <CardBody>
+                <TemplateOptions
+                  optionsSchema={templates["base"].placehoderSchemas}
+                  onChange={handlePlacehodersChange}
+                />
+              </CardBody>
+            </Card>
+          </Tab>
+        )}
+        {templates["base"].optionSchemas && (
+          <Tab key="模板配置" title="模板配置">
+            <Card className={styles.panelItem}>
+              <CardBody>
+                <TemplateOptions
+                  optionsSchema={templates["base"].optionSchemas}
+                  onChange={handleOptionsChange}
+                />
+              </CardBody>
+            </Card>
+          </Tab>
+        )}
         <Tab key="模板选择" title="模板选择">
           <Card className={styles.panelItem}>
             <CardBody></CardBody>

@@ -1,21 +1,21 @@
 import FormRender, { useForm } from "form-render";
-import { PlacehoderSchema, TemplateComponent } from "@shared";
+import { BaseSchema } from "@shared";
 
 export interface TemplateOptionsProps {
-  template: TemplateComponent<any>;
+  optionsSchema: BaseSchema;
   onChange?: (value: any) => void;
 }
 
-function parseSchema(placehoderSchemas: Record<any, PlacehoderSchema>) {
+function parseSchema(_schema: Record<any, BaseSchema>) {
   const schema = {
     type: "object",
     column: 1,
     displayType: "column",
-    properties: Object.keys(placehoderSchemas).reduce((acc, key) => {
-      const placehoderSchema = placehoderSchemas[key];
+    properties: Object.keys(_schema).reduce((acc, key) => {
+      const schemaItem = _schema[key];
       acc[key] = {
-        title: placehoderSchema.title || key,
-        ...placehoderSchema,
+        title: schemaItem.title || key,
+        ...schemaItem,
       };
       return acc;
     }, {} as Record<any, any>),
@@ -24,13 +24,13 @@ function parseSchema(placehoderSchemas: Record<any, PlacehoderSchema>) {
 }
 
 export default function TemplateOptions(props: TemplateOptionsProps) {
-  const { template } = props;
-  const { placehoderSchemas } = template;
+  const { optionsSchema } = props;
+
   const form = useForm();
-  if (!placehoderSchemas) {
+  if (!optionsSchema) {
     return null;
   }
-  const schema = parseSchema(placehoderSchemas);
+  const schema = parseSchema(optionsSchema);
 
   const watch = {
     "#": (value: any) => {

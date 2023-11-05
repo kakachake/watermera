@@ -1,19 +1,17 @@
 import { Placehoders, TemplateComponent } from "..";
 
-export function getDefalutPlacehoders<T extends string[]>(
-  Comp: TemplateComponent<T>
-): Placehoders<T> {
-  const placehoderSchemas = Comp.placehoderSchemas;
-  if (!placehoderSchemas) {
+export function getDefalutBySchemas<T extends string[]>(
+  Comp: TemplateComponent<T>,
+  key: "placehoderSchemas" | "optionSchemas"
+): Record<string, any> {
+  const schemas = Comp[key];
+  if (!schemas) {
     return {} as Placehoders<T>;
   }
-  return Object.keys(placehoderSchemas).reduce(
-    (acc, key: keyof typeof placehoderSchemas) => {
-      acc[key] = placehoderSchemas[key].default;
-      return acc;
-    },
-    {} as Placehoders<T>
-  );
+  return Object.keys(schemas).reduce((acc, key: string) => {
+    acc[key] = (schemas as any)[key].default;
+    return acc;
+  }, {} as Record<string, any>);
 }
 
 export function parseOptionsByKeyValue(options: { [key: string]: string }): {

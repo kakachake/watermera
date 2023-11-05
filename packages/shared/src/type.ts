@@ -17,6 +17,7 @@ export interface ImageFile {
   templateOptions: {
     [key in keyof typeof templates]?: {
       placeholders?: Placehoders<any>;
+      options?: Options<any>;
     };
   };
 }
@@ -73,26 +74,32 @@ export type ExifInfo = {
 
 export type keyofExifInfo = keyof ExifInfo;
 
-export type PlacehoderSchema = SchemaBase & {
-  default: string;
-};
+export type BaseSchema<T extends (string | number)[] = any[]> = Record<
+  T[number],
+  SchemaBase & {
+    default: any;
+  }
+>;
 
 export type Placehoders<T extends (string | number)[]> = Record<
   T[number],
   string
 >;
 
+export type Options<T extends (string | number)[]> = Record<T[number], any>;
+
 export type TemplateComponent<T extends (string | number)[]> =
   ForwardRefExoticComponent<
     PropsWithoutRef<BaseTemplateProps<T>> & RefAttributes<any>
   > & {
-    placehoderSchemas?: Record<T[number], PlacehoderSchema>;
-    optionSchemas?: Record<string, any>;
+    placehoderSchemas?: BaseSchema<T>;
+    optionSchemas?: BaseSchema;
   };
 
 export interface BaseTemplateProps<T extends (string | number)[] = []> {
   image: ImageFile;
   placehoders?: Placehoders<T>;
+  options?: Options<any>;
   preview?: boolean;
   onLoad?: () => void;
 }

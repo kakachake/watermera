@@ -1,6 +1,8 @@
-import React, { useImperativeHandle } from "react";
+import React, { useImperativeHandle, useState } from "react";
 import {
   BaseTemplateProps,
+  Options,
+  Placehoders,
   TemplateComponent,
   keyofExifInfo,
 } from "../../type";
@@ -9,7 +11,7 @@ import { ExifKey, ExifKeyName } from "../../constants";
 import { logo } from "../../imgs/logo";
 import { calcSizeByImageSize } from "../../utils/calc";
 import {
-  getDefalutPlacehoders,
+  getDefalutBySchemas,
   parseOptionsByKeyValue,
 } from "../../utils/template";
 
@@ -28,16 +30,24 @@ function _BaseTemplate(
 ) {
   const {
     image,
-    placehoders = getDefalutPlacehoders(BaseTemplate),
+    placehoders = getDefalutBySchemas(
+      BaseTemplate,
+      "placehoderSchemas"
+    ) as Placehoders<PlacehoderKeys>,
     onLoad,
+    options = getDefalutBySchemas(
+      BaseTemplate,
+      "optionSchemas"
+    ) as Options<any>,
     // preview = false,
     ...rest
   } = props;
-  console.log("placehoders", placehoders);
 
   const imgRef = React.useRef<HTMLImageElement>(null);
   const { exifInfo, rawFile } = image;
   const divRef = React.useRef<HTMLDivElement>(null);
+
+  const [baseSize, setBaseSize] = useState(16);
 
   if (!placehoders) {
     throw Error("placeholder为空，请检查");
@@ -113,13 +123,22 @@ function _BaseTemplate(
     const { height, width } = imgRef.current!;
     const baseSize = calcSizeByImageSize(width, height);
     divRef.current!.style.fontSize = baseSize + "px";
+    setBaseSize(baseSize);
     setTimeout(() => {
       onLoad?.();
     }, 100);
   };
 
   return (
-    <div ref={divRef} style={{}} className={styles.wrap} {...rest}>
+    <div
+      ref={divRef}
+      style={{
+        padding: options.padding * baseSize + "px",
+        backgroundColor: options.backgroundColor,
+      }}
+      className={styles.wrap}
+      {...rest}
+    >
       <img
         style={{
           maxWidth: "none",
@@ -214,6 +233,20 @@ BaseTemplate.placehoderSchemas = {
   },
 } as const;
 
-BaseTemplate.optionSchemas = {};
+BaseTemplate.optionSchemas = {
+  padding: {
+    default: 2,
+    type: "number",
+    widget: "slider",
+    min: 0,
+    max: 10,
+  },
+  backgroundColor: {
+    default: "#fff",
+    title: "背景颜色选择",
+    type: "string",
+    widget: "color",
+  },
+};
 
 export default BaseTemplate;
