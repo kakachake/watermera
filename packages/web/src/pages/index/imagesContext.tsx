@@ -62,6 +62,7 @@ export const ImagesProviderHOC = (
         image: images[currentIndex],
         index: currentIndex,
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [images]);
 
     const setCurrentIdx = (idx: number) => {

@@ -1,4 +1,5 @@
 module.exports = {
+  extends: "../../.eslintrc.js",
   root: true,
   env: { browser: true, es2020: true, node: true },
   extends: [
@@ -10,6 +11,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh"],
   rules: {
+    "@typescript-eslint/no-var-requires": "off",
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },

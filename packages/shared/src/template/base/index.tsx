@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   BaseTemplateProps,
   Placehoder,
@@ -27,7 +27,7 @@ function _BaseTemplate(
     image,
     placehoders = defalutPlacehoders,
     onLoad,
-    preview = false,
+    // preview = false,
     ...rest
   } = props;
   const imgRef = React.useRef<HTMLImageElement>(null);
