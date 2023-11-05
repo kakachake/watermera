@@ -134,10 +134,6 @@ function _BaseTemplate(
     }
   };
 
-  useLayoutEffect(() => {
-    setBaseWidth(0);
-  }, [image]);
-
   const imgOnload = () => {
     const { height, width } = imgRef.current!;
     const baseHeight = calcSizeByImageSize(width, height);
