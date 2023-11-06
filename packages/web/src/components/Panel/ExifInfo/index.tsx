@@ -1,4 +1,5 @@
 import {
+  Input,
   Table,
   TableBody,
   TableCell,
@@ -8,18 +9,32 @@ import {
 } from "@nextui-org/react";
 import { ExifInfo } from "@shared";
 import styles from "./index.module.scss";
+import { ChangeEvent } from "react";
 
 export interface ExifInfoProps {
   exifInfo: ExifInfo | null;
+  onChange: (exifInfo: ExifInfo) => void;
 }
 
 export default function ExifInfoComp(props: ExifInfoProps) {
   const { exifInfo } = props;
-  console.log(exifInfo);
 
   if (!exifInfo) {
     return null;
   }
+
+  const handleExifInfoChange = (
+    key: keyof ExifInfo,
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+
+    props.onChange({
+      ...exifInfo,
+      [key]: value,
+    });
+  };
+
   return (
     <>
       <Table
@@ -44,7 +59,14 @@ export default function ExifInfoComp(props: ExifInfoProps) {
                 </TableCell>
                 <TableCell>
                   <div className={styles.value}>
-                    {exifInfo[key as keyof ExifInfo].toString()}
+                    <Input
+                      size={"sm"}
+                      value={exifInfo[key as keyof ExifInfo].toString()}
+                      onChange={handleExifInfoChange.bind(
+                        null,
+                        key as keyof ExifInfo
+                      )}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

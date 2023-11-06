@@ -8,12 +8,12 @@ import {
 } from "../../type";
 import styles from "./index.module.scss";
 import { ExifKey, ExifKeyName } from "../../constants";
-import { logo } from "../../imgs/logo";
 import { calcSizeByImageSize } from "../../utils/calc";
 import {
   getDefalutBySchemas,
   parseOptionsByKeyValue,
 } from "../../utils/template";
+import RenderLogo from "../../imgs/renderLogo";
 
 export type PlacehoderKeys = [
   "leftTop1",
@@ -74,27 +74,6 @@ function _BaseTemplate(
     }
   };
 
-  const renderLogo = () => {
-    const logoName = exifInfo?.Make?.toLocaleLowerCase();
-    if (logoName in logo) {
-      return (
-        <img
-          src={logo[logoName as keyof typeof logo]}
-          alt={logoName}
-          style={{
-            height: "2em",
-          }}
-        />
-      );
-    } else {
-      return (
-        <span className={styles.logoName} style={{}}>
-          {logoName?.toUpperCase()}
-        </span>
-      );
-    }
-  };
-
   const imgOnload = () => {
     const { height, width } = imgRef.current!;
     const baseSize = calcSizeByImageSize(width, height);
@@ -139,7 +118,14 @@ function _BaseTemplate(
           </div>
         </div>
         <div className={styles.right}>
-          {renderLogo()}
+          <RenderLogo
+            logoName={exifInfo.Make}
+            styles={{
+              img: {
+                height: "2em",
+              },
+            }}
+          />
           <div
             style={{
               width: "0.1em",
@@ -221,7 +207,7 @@ BaseTemplate.optionSchemas = {
     type: "number",
     widget: "slider",
     min: 0,
-    max: 10,
+    max: 15,
   },
   backgroundColor: {
     default: "#fff",

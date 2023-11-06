@@ -25,7 +25,7 @@ export default function LazyImage(props: ImageProps) {
   }, []);
 
   return (
-    <div>
+    <>
       {imageSrc ? (
         <Image {...props} src={imageSrc} />
       ) : (
@@ -33,6 +33,6 @@ export default function LazyImage(props: ImageProps) {
           <div className="h-24 rounded-lg bg-default-300"></div>
         </Skeleton>
       )}
-    </div>
+    </>
   );
 }

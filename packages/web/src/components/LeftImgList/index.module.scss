@@ -14,3 +14,18 @@
     }
   }
 }
+@media screen and (max-width: 768px) {
+  .imagesWrap {
+    flex-direction: row;
+    overflow-x: auto;
+    height: 200px;
+    overflow-y: hidden;
+    .imageItem {
+      flex: 0 0 200px;
+      height: 100%;
+      > img {
+        object-fit: contain;
+      }
+    }
+  }
+}

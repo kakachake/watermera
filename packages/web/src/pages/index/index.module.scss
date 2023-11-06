@@ -8,6 +8,7 @@
   box-sizing: border-box;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 .panel {
   flex: 0 0 400px;
@@ -69,4 +70,29 @@
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    width: 100%;
+  }
+  .panel {
+    width: 100%;
+    flex: 1;
+  }
+  .previewCard {
+    flex: 1;
+    width: 100%;
+  }
+  .leftCard {
+    width: 100%;
+    flex: 1;
+    flex-direction: column;
+    .imageListWrap {
+      flex: 1;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
 }

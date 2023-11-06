@@ -4,7 +4,7 @@ import { saveAs } from "file-saver";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
 
-const getRootDiv = (() => {
+const getRootDiv: () => HTMLDivElement = (() => {
   const exportWrap = document.createElement("div");
   exportWrap.id = "exportWrap";
   exportWrap.style.position = "absolute";
@@ -49,7 +49,9 @@ export function exportImgByTemp(
 
 export function getImgByDiv(div: HTMLDivElement) {
   return new Promise<Blob>((resolve) => {
-    html2canvas(div as HTMLElement, {}).then((canvas: HTMLCanvasElement) => {
+    html2canvas(div, {
+      scale: 1,
+    }).then((canvas: HTMLCanvasElement) => {
       canvas.toBlob((blob) => {
         resolve(blob!);
       });

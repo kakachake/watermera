@@ -22,6 +22,7 @@ export interface ImagesContextType {
     templateName: keyof typeof templates,
     templateOptions: ImageFile["templateOptions"][keyof typeof templates]
   ) => void;
+  setExifInfo: (exifInfo: ImageFile["exifInfo"]) => void;
 }
 
 const ImagesContext = createContext<ImagesContextType>({
@@ -41,6 +42,9 @@ const ImagesContext = createContext<ImagesContextType>({
   },
   setTemplateOptions: () => {
     throw new Error("setTemplateOptions not implemented");
+  },
+  setExifInfo: () => {
+    throw new Error("setExifInfo not implemented");
   },
 });
 
@@ -87,8 +91,24 @@ export const ImagesProviderHOC = (
       if (!image) {
         return;
       }
-      image.templateOptions[templateName] = templateOptions;
-      console.log("set", templateOptions);
+      image.templateOptions[templateName] = {
+        ...image.templateOptions[templateName],
+        ...templateOptions,
+      };
+
+      setCurrent({
+        image,
+        index: current.index,
+      });
+    };
+
+    const setExifInfo = (exifInfo: ImageFile["exifInfo"]) => {
+      const image = current.image;
+      if (!image) {
+        return;
+      }
+      image.exifInfo = exifInfo;
+      console.log(image.exifInfo);
 
       setCurrent({
         image,
@@ -105,6 +125,7 @@ export const ImagesProviderHOC = (
           setCurrent,
           setCurrentIdx,
           setTemplateOptions,
+          setExifInfo,
         }}
       >
         <Comp {...props} />

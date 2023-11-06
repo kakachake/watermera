@@ -6,8 +6,9 @@ import TemplateOptions from "./TemplateOptions";
 import { Placehoders, templates } from "@shared";
 
 export function Panel() {
-  const { current, setTemplateOptions } = useImagesContext();
+  const { current, setTemplateOptions, setExifInfo } = useImagesContext();
   const exifInfo = current.image?.exifInfo || null;
+
   const handlePlacehodersChange = (value: any) => {
     setTemplateOptions("base", {
       placeholders: value as Placehoders<any>,
@@ -32,7 +33,7 @@ export function Panel() {
         <Tab key="基础信息" title="基础信息">
           <Card className={styles.panelItem}>
             <CardBody>
-              <ExifInfo exifInfo={exifInfo} />
+              <ExifInfo exifInfo={exifInfo} onChange={setExifInfo} />
             </CardBody>
           </Card>
         </Tab>
@@ -41,8 +42,10 @@ export function Panel() {
             <Card className={styles.panelItem}>
               <CardBody>
                 <TemplateOptions
+                  key={current.image?.url}
                   optionsSchema={templates["base"].placehoderSchemas}
                   onChange={handlePlacehodersChange}
+                  options={current.image?.templateOptions?.base?.placeholders}
                 />
               </CardBody>
             </Card>
@@ -53,8 +56,10 @@ export function Panel() {
             <Card className={styles.panelItem}>
               <CardBody>
                 <TemplateOptions
+                  key={current.image?.url}
                   optionsSchema={templates["base"].optionSchemas}
                   onChange={handleOptionsChange}
+                  options={current.image?.templateOptions?.base?.options}
                 />
               </CardBody>
             </Card>

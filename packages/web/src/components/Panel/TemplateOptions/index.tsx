@@ -1,8 +1,10 @@
 import FormRender, { useForm } from "form-render";
 import { BaseSchema } from "@shared";
+import { useEffect, useMemo } from "react";
 
 export interface TemplateOptionsProps {
   optionsSchema: BaseSchema;
+  options?: Record<any, any>;
   onChange?: (value: any) => void;
 }
 
@@ -24,13 +26,16 @@ function parseSchema(_schema: Record<any, BaseSchema>) {
 }
 
 export default function TemplateOptions(props: TemplateOptionsProps) {
-  const { optionsSchema } = props;
+  const { optionsSchema, options } = props;
 
   const form = useForm();
-  if (!optionsSchema) {
-    return null;
-  }
-  const schema = parseSchema(optionsSchema);
+  console.log("render", options);
+
+  useEffect(() => {
+    form.setValues(options);
+  }, [options, form]);
+
+  const schema = useMemo(() => parseSchema(optionsSchema), [optionsSchema]);
 
   const watch = {
     "#": (value: any) => {
@@ -38,6 +43,9 @@ export default function TemplateOptions(props: TemplateOptionsProps) {
     },
   };
 
+  if (!optionsSchema) {
+    return null;
+  }
   return (
     <>
       <FormRender form={form} schema={schema} watch={watch} />
