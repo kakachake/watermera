@@ -38,7 +38,7 @@ export default function useExportImgsByTemp(
     });
 
     setIsExporting(false);
-  }, [images]);
+  }, [images, props]);
 
   return {
     handleExport,
