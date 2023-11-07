@@ -8,6 +8,7 @@ import { useCallback, useState } from "react";
 
 export default function useExportImgsByTemp(
   images: ImageFile[],
+  templateName: keyof typeof templates,
   props: Partial<BaseTemplateProps> = {}
 ) {
   const [isExporting, setIsExporting] = useState(false);
@@ -29,16 +30,21 @@ export default function useExportImgsByTemp(
     if (!images.length) return;
     initProgress();
     setIsExporting(true);
-    await exportImgsByTemp(images, templates["base"], props, (idx, total) => {
-      setProgress({
-        percent: Math.round((idx / total) * 100),
-        idx,
-        total,
-      });
-    });
+    await exportImgsByTemp(
+      images,
+      templates[templateName].Comp,
+      props,
+      (idx, total) => {
+        setProgress({
+          percent: Math.round((idx / total) * 100),
+          idx,
+          total,
+        });
+      }
+    );
 
     setIsExporting(false);
-  }, [images, props]);
+  }, [images, props, templateName]);
 
   return {
     handleExport,

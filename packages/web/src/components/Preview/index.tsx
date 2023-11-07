@@ -2,17 +2,18 @@
 import { ImageFile } from "@shared";
 import { templates } from "@shared";
 import styles from "./index.module.scss";
-import { forwardRef, useLayoutEffect, useRef, useState } from "react";
+import { Suspense, forwardRef, useLayoutEffect, useRef, useState } from "react";
 import classnames from "classnames";
 import { Spinner } from "@nextui-org/react";
 import Draggable from "react-draggable";
 export interface PreviewProps {
   image: ImageFile | null;
+  templateName: keyof typeof templates;
   onLoad: () => void;
 }
 
-function Preview({ image, onLoad }: PreviewProps) {
-  const BaseTemplate = templates["base"];
+function Preview({ image, onLoad, templateName }: PreviewProps) {
+  const BaseTemplate = templates[templateName].Comp;
   const [loaded, setLoaded] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -38,7 +39,7 @@ function Preview({ image, onLoad }: PreviewProps) {
 
   useLayoutEffect(() => {
     setLoaded(false);
-  }, [image]);
+  }, [image, templateName]);
 
   const onWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -62,7 +63,7 @@ function Preview({ image, onLoad }: PreviewProps) {
     ref.current!.style.transform = `scale(${nextScale})`;
   };
 
-  console.log(image?.templateOptions["base"]);
+  console.log(image?.templateOptions[templateName]);
 
   return (
     <>
@@ -84,17 +85,19 @@ function Preview({ image, onLoad }: PreviewProps) {
         >
           <Draggable scale={1}>
             <div onWheel={onWheel}>
-              <div>
+              <Suspense fallback="loading">
                 <BaseTemplate
                   image={image}
                   ref={ref}
                   key={image.rawFile.name}
                   onLoad={onLoadPreview}
                   preview={true}
-                  placehoders={image.templateOptions["base"]?.placeholders}
-                  options={image.templateOptions["base"]?.options}
+                  placehoders={
+                    image.templateOptions[templateName]?.placeholders
+                  }
+                  options={image.templateOptions[templateName]?.options}
                 />
-              </div>
+              </Suspense>
             </div>
           </Draggable>
         </div>

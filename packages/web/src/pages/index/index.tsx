@@ -11,22 +11,26 @@ import useExportImgsByTemp from "../../hooks/useExportImgsByTemp";
 import ProgressButton from "../../components/ProgressButton";
 
 function Index() {
-  const { images, setImages, current, setCurrentIdx } = useImagesContext();
+  const { images, setImages, current, setCurrentIdx, templateName } =
+    useImagesContext();
   const handleOnChange = (files: ImageFile[]) => {
     setImages(files);
   };
 
   const onLoad = () => {};
 
-  const { isExporting, handleExport } = useExportImgByTemp(current.image!);
+  const { isExporting, handleExport } = useExportImgByTemp(
+    current.image!,
+    templateName
+  );
 
   const {
     isExporting: isExportingAll,
     progress,
     handleExport: handleExportAll,
-  } = useExportImgsByTemp(images, {
-    placehoders: current.image?.templateOptions["base"]?.placeholders,
-    options: current.image?.templateOptions["base"]?.options,
+  } = useExportImgsByTemp(images, templateName, {
+    placehoders: current.image?.templateOptions[templateName]?.placeholders,
+    options: current.image?.templateOptions[templateName]?.options,
   });
 
   const handleImageChange = (idx: number) => {
@@ -53,7 +57,11 @@ function Index() {
       </div>
       <Card className={styles.previewCard}>
         <CardBody className={styles.previewBody}>
-          <Preview image={current.image} onLoad={onLoad} />
+          <Preview
+            templateName={templateName}
+            image={current.image}
+            onLoad={onLoad}
+          />
         </CardBody>
       </Card>
       <div className={styles.panel}>

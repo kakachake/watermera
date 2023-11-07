@@ -1,5 +1,6 @@
 import React, { useImperativeHandle, useState } from "react";
 import {
+  BaseSchema,
   BaseTemplateProps,
   Options,
   Placehoders,
@@ -14,14 +15,16 @@ import {
   parseOptionsByKeyValue,
 } from "../../utils/template";
 import RenderLogo from "../../imgs/renderLogo";
+import classNames from "classnames";
 
 export type PlacehoderKeys = [
-  "leftTop1",
-  "leftTop2",
-  "leftTop3",
-  "leftBottom",
-  "rightTop",
-  "rightBottom"
+  "rightTop1",
+  "rightTop2",
+  "rightTop3",
+  "rightTop4",
+  "left",
+  "rightBottom",
+  "left2"
 ];
 
 function _BaseTemplate(
@@ -54,17 +57,19 @@ function _BaseTemplate(
   const renderInfo = (key: keyofExifInfo) => {
     switch (key) {
       case ExifKey.ISO:
-        return <span style={{}}>ISO{exifInfo?.[key]}</span>;
+        return <>ISO{exifInfo?.[key]}</>;
       case ExifKey.FNumber:
-        return <span style={{}}>f{exifInfo?.[key]}</span>;
+        return <>f{exifInfo?.[key]}</>;
       case ExifKey.ExposureTime:
-        return <span style={{}}>1/{1 / exifInfo?.[key]}s</span>;
+        return <>1/{1 / exifInfo?.[key]}s</>;
       case ExifKey.CreateDate:
-        return <span style={{}}>{exifInfo?.[key]?.toLocaleString()}</span>;
+        return <>{exifInfo?.[key]?.toLocaleString()}</>;
       case ExifKey.Model:
-        return <span style={{}}>{exifInfo?.[key]}</span>;
+        return <>{exifInfo?.[key]}</>;
       case ExifKey.LensModel:
-        return <span style={{}}>{exifInfo?.[key]}</span>;
+        return <>{exifInfo?.[key]}</>;
+      case ExifKey.FocalLength:
+        return <>{exifInfo?.[key]}mm</>;
       default:
         return exifInfo?.[key].toString() || "";
     }
@@ -87,7 +92,7 @@ function _BaseTemplate(
         padding: options.padding * baseSize + "px",
         backgroundColor: options.backgroundColor,
       }}
-      className={styles.wrap}
+      className={classNames(styles.wrap, "font-serif")}
       {...rest}
     >
       <img
@@ -102,15 +107,16 @@ function _BaseTemplate(
       />
       <div className={styles.infoBar}>
         <div className={styles.left}>
-          <div className={styles.boldFont}>
-            {renderInfo(placehoders["leftTop1"] as keyofExifInfo)}
-            &nbsp;
-            {renderInfo(placehoders["leftTop2"] as keyofExifInfo)}
-            &nbsp;
-            {renderInfo(placehoders["leftTop3"] as keyofExifInfo)}
-          </div>
-          <div className={styles.boldFont}>
-            {renderInfo(placehoders["leftBottom"] as keyofExifInfo)}
+          <div>
+            <div
+              className={"text-slate-950 font-semibold	"}
+              style={{
+                fontSize: "1.2em",
+              }}
+            >
+              {renderInfo(placehoders["left2"] as keyofExifInfo)}
+              {renderInfo(placehoders["left"] as keyofExifInfo)}
+            </div>
           </div>
         </div>
         <div className={styles.right}>
@@ -132,9 +138,15 @@ function _BaseTemplate(
           ></div>
           <div>
             <div className={styles.boldFont}>
-              {renderInfo(placehoders["rightTop"] as keyofExifInfo)}
+              {renderInfo(placehoders["rightTop1"] as keyofExifInfo)}
+              &nbsp;
+              {renderInfo(placehoders["rightTop2"] as keyofExifInfo)}
+              &nbsp;
+              {renderInfo(placehoders["rightTop3"] as keyofExifInfo)}
+              &nbsp;
+              {renderInfo(placehoders["rightTop4"] as keyofExifInfo)}
             </div>
-            <div className={styles.secondFont}>
+            <div className={"text-slate-500"}>
               {renderInfo(placehoders["rightBottom"] as keyofExifInfo)}
             </div>
           </div>
@@ -149,40 +161,34 @@ const BaseTemplate: TemplateComponent<PlacehoderKeys> = React.forwardRef<
   BaseTemplateProps<PlacehoderKeys>
 >(_BaseTemplate);
 
-export const placeholderSchemas = {
-  leftTop1: {
-    title: "左上1",
-    default: ExifKey.ISO,
+export const placeholderSchemas: BaseSchema<PlacehoderKeys> = {
+  rightTop1: {
+    title: "右上1",
+    default: ExifKey.FocalLength,
     type: "string",
     props: {
       options: parseOptionsByKeyValue(ExifKeyName),
     },
   },
-  leftTop2: {
-    title: "左上2",
+  rightTop2: {
+    title: "右上2",
     default: ExifKey.FNumber,
     type: "string",
     props: {
       options: parseOptionsByKeyValue(ExifKeyName),
     },
   },
-  leftTop3: {
-    title: "左上3",
+  rightTop3: {
+    title: "右上3",
     default: ExifKey.ExposureTime,
     type: "string",
     props: {
       options: parseOptionsByKeyValue(ExifKeyName),
     },
   },
-  leftBottom: {
-    default: ExifKey.CreateDate,
-    type: "string",
-    props: {
-      options: parseOptionsByKeyValue(ExifKeyName),
-    },
-  },
-  rightTop: {
-    default: ExifKey.Model,
+  rightTop4: {
+    title: "右上4",
+    default: ExifKey.ISO,
     type: "string",
     props: {
       options: parseOptionsByKeyValue(ExifKeyName),
@@ -190,6 +196,20 @@ export const placeholderSchemas = {
   },
   rightBottom: {
     default: ExifKey.LensModel,
+    type: "string",
+    props: {
+      options: parseOptionsByKeyValue(ExifKeyName),
+    },
+  },
+  left: {
+    default: ExifKey.Model,
+    type: "string",
+    props: {
+      options: parseOptionsByKeyValue(ExifKeyName),
+    },
+  },
+  left2: {
+    default: ExifKey.Make,
     type: "string",
     props: {
       options: parseOptionsByKeyValue(ExifKeyName),
@@ -215,7 +235,7 @@ export const optionSchemas = {
     widget: "color",
   },
   logoSize: {
-    default: 2,
+    default: 1,
     title: "logo大小",
     type: "number",
     widget: "slider",
@@ -226,6 +246,7 @@ export const optionSchemas = {
     },
   },
 };
+
 export const schemas = {
   placeholderSchemas,
   optionSchemas,

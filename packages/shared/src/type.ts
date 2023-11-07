@@ -20,6 +20,7 @@ export interface ImageFile {
       options?: Options<any>;
     };
   };
+  templateName: keyof typeof templates;
 }
 
 export type ExifInfo = {

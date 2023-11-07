@@ -15,6 +15,7 @@ export interface ImagesContextType {
     image: ImageFile | null;
     index: number;
   };
+  templateName: keyof typeof templates;
   setImages: (images: ImageFile[]) => void;
   setCurrent: (current: ImagesContextType["current"]) => void;
   setCurrentIdx: (idx: number) => void;
@@ -23,6 +24,7 @@ export interface ImagesContextType {
     templateOptions: ImageFile["templateOptions"][keyof typeof templates]
   ) => void;
   setExifInfo: (exifInfo: ImageFile["exifInfo"]) => void;
+  setTemplateName: (templateName: keyof typeof templates) => void;
 }
 
 const ImagesContext = createContext<ImagesContextType>({
@@ -31,6 +33,7 @@ const ImagesContext = createContext<ImagesContextType>({
     image: null,
     index: 0,
   },
+  templateName: Object.keys(templates)[0] as keyof typeof templates,
   setImages: () => {
     throw new Error("setImages not implemented");
   },
@@ -46,6 +49,9 @@ const ImagesContext = createContext<ImagesContextType>({
   setExifInfo: () => {
     throw new Error("setExifInfo not implemented");
   },
+  setTemplateName: () => {
+    throw new Error("setTemplateName not implemented");
+  },
 });
 
 export default ImagesContext;
@@ -59,6 +65,9 @@ export const ImagesProviderHOC = (
       image: null,
       index: 0,
     });
+    const [templateName, setTemplateName] = useState<keyof typeof templates>(
+      Object.keys(templates)[0] as keyof typeof templates
+    );
 
     useEffect(() => {
       if (images.length <= 0) {
@@ -108,7 +117,6 @@ export const ImagesProviderHOC = (
         return;
       }
       image.exifInfo = exifInfo;
-      console.log(image.exifInfo);
 
       setCurrent({
         image,
@@ -119,6 +127,8 @@ export const ImagesProviderHOC = (
     return (
       <ImagesContext.Provider
         value={{
+          templateName,
+          setTemplateName,
           images,
           current,
           setImages,

@@ -1,10 +1,8 @@
-import { Placehoders, TemplateComponent } from "..";
+import { BaseSchema, Placehoders } from "..";
 
 export function getDefalutBySchemas<T extends string[]>(
-  Comp: TemplateComponent<T>,
-  key: "placehoderSchemas" | "optionSchemas"
+  schemas?: BaseSchema<any>
 ): Record<string, any> {
-  const schemas = Comp[key];
   if (!schemas) {
     return {} as Placehoders<T>;
   }

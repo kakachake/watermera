@@ -3,19 +3,22 @@ import { useImagesContext } from "../../pages/index/imagesContext";
 import styles from "./index.module.scss";
 import ExifInfo from "./ExifInfo";
 import TemplateOptions from "./TemplateOptions";
-import { Placehoders, templates } from "@shared";
+import { Placehoders, TemplateInfo, templates } from "@shared";
+import TemplateSelect from "./templateSelect";
 
 export function Panel() {
-  const { current, setTemplateOptions, setExifInfo } = useImagesContext();
+  const { current, setTemplateOptions, setExifInfo, templateName } =
+    useImagesContext();
   const exifInfo = current.image?.exifInfo || null;
+  const template: TemplateInfo = templates[templateName];
 
   const handlePlacehodersChange = (value: any) => {
-    setTemplateOptions("base", {
+    setTemplateOptions(templateName, {
       placeholders: value as Placehoders<any>,
     });
   };
   const handleOptionsChange = (value: any) => {
-    setTemplateOptions("base", {
+    setTemplateOptions(templateName, {
       options: value as Placehoders<any>,
     });
   };
@@ -37,13 +40,13 @@ export function Panel() {
             </CardBody>
           </Card>
         </Tab>
-        {templates["base"].placehoderSchemas && (
+        {template.schemas?.placeholderSchemas && (
           <Tab key="字段配置" title="字段配置">
             <Card className={styles.panelItem}>
               <CardBody>
                 <TemplateOptions
                   key={current.image?.url}
-                  optionsSchema={templates["base"].placehoderSchemas}
+                  optionsSchema={template.schemas?.placeholderSchemas}
                   onChange={handlePlacehodersChange}
                   options={current.image?.templateOptions?.base?.placeholders}
                 />
@@ -51,13 +54,13 @@ export function Panel() {
             </Card>
           </Tab>
         )}
-        {templates["base"].optionSchemas && (
+        {template.schemas?.optionSchemas && (
           <Tab key="模板配置" title="模板配置">
             <Card className={styles.panelItem}>
               <CardBody>
                 <TemplateOptions
                   key={current.image?.url}
-                  optionsSchema={templates["base"].optionSchemas}
+                  optionsSchema={template.schemas?.optionSchemas}
                   onChange={handleOptionsChange}
                   options={current.image?.templateOptions?.base?.options}
                 />
@@ -67,7 +70,9 @@ export function Panel() {
         )}
         <Tab key="模板选择" title="模板选择">
           <Card className={styles.panelItem}>
-            <CardBody></CardBody>
+            <CardBody>
+              <TemplateSelect />
+            </CardBody>
           </Card>
         </Tab>
       </Tabs>
