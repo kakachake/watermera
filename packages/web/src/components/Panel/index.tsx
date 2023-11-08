@@ -45,7 +45,7 @@ export function Panel() {
             <Card className={styles.panelItem}>
               <CardBody>
                 <TemplateOptions
-                  key={current.image?.url}
+                  key={(current.image?.url || "") + templateName}
                   optionsSchema={template.schemas?.placeholderSchemas}
                   onChange={handlePlacehodersChange}
                   options={current.image?.templateOptions?.base?.placeholders}
@@ -59,10 +59,12 @@ export function Panel() {
             <Card className={styles.panelItem}>
               <CardBody>
                 <TemplateOptions
-                  key={current.image?.url}
+                  key={(current.image?.url || "") + templateName}
                   optionsSchema={template.schemas?.optionSchemas}
                   onChange={handleOptionsChange}
-                  options={current.image?.templateOptions?.base?.options}
+                  options={
+                    current.image?.templateOptions?.[templateName]?.options
+                  }
                 />
               </CardBody>
             </Card>
